@@ -264,3 +264,20 @@ function int_to_digits($number, $digits)
 
     return $gen;
 }
+
+function permission($permissions, $p) {
+    if(!is_array($permissions) && $permissions == '*') {
+        return true;
+    }
+
+    $app_permisos = explode('.',$p);
+    $niveles = count($app_permisos);
+
+    foreach ($permissions as $permiso) {
+        for($i = 0; $i < $niveles; $i++) {
+            if($permiso == $app_permisos[$i].'.*' || $permiso == $app_permisos[$i]) {
+                return true;
+            }
+        }
+    }
+}
