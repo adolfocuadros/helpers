@@ -265,19 +265,32 @@ function int_to_digits($number, $digits)
     return $gen;
 }
 
-function permission($permissions, $p) {
-    if(!is_array($permissions) && $permissions == '*') {
+function permission($userPermissions, $systemPermission) {
+    if(!is_array($userPermissions) && $userPermissions == '*') {
         return true;
     }
 
-    $app_permisos = explode('.',$p);
-    $niveles = count($app_permisos);
-
-    foreach ($permissions as $permiso) {
-        for($i = 0; $i < $niveles; $i++) {
-            if($permiso == $app_permisos[$i].'.*' || $permiso == $app_permisos[$i]) {
-                return true;
+    foreach ($userPermissions as $permission) {
+        if($permission == $systemPermission) {
+            return true;
+        } elseif(strpos($permission, '*') !== false) {
+            preg_match('/(.+)\.\*/i',$permission, $match);
+            if(isset($match[1])) {
+                if(strpos($systemPermission, $match[1]) !== false) {
+                    return true;
+                }
+            }
+        } else {
+            $permissionExplode = explode('.',$permission);
+            $p = '';
+            for($i=0;$i<count($permissionExplode); $i++) {
+                $p .= $permissionExplode[$i];
+                if($p == $systemPermission) {
+                    return true;
+                }
+                $p .= '.';
             }
         }
     }
+    return false;
 }
