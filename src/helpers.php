@@ -273,22 +273,17 @@ function permission($userPermissions, $systemPermission) {
     foreach ($userPermissions as $permission) {
         if($permission == $systemPermission) {
             return true;
-        } elseif(strpos($permission, '*') !== false) {
-            preg_match('/(.+)\.\*/i',$permission, $match);
-            if(isset($match[1])) {
-                if(strpos($systemPermission, $match[1]) !== false) {
-                    return true;
-                }
-            }
         } else {
-            $permissionExplode = explode('.',$permission);
-            $p = '';
-            for($i=0;$i<count($permissionExplode); $i++) {
-                $p .= $permissionExplode[$i];
-                if($p == $systemPermission) {
-                    return true;
+            if(strpos($permission,$systemPermission) !== false) {
+                return true;
+            }
+            if(strpos($permission, '*') !== false) {
+                preg_match('/(.+)\.\*/i',$permission, $match);
+                if(isset($match[1])) {
+                    if(strpos($systemPermission, $match[1]) !== false) {
+                        return true;
+                    }
                 }
-                $p .= '.';
             }
         }
     }
