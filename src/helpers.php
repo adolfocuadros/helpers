@@ -126,8 +126,8 @@ function numberToString($num, $monedaStr = 'SOLES', $fem = false, $dec = true) {
         $num = substr($num, 1);
     }else
         $neg = '';
-    while ($num[0] == '0') $num = substr($num, 1);
-    if ($num[0] < '1' or $num[0] > 9) $num = '0' . $num;
+    while (isset($num[0]) && $num[0] == '0') $num = substr($num, 1);
+    if (isset($num[0]) && ($num[0] < '1' or $num[0] > 9)) $num = '0' . $num;
     $zeros = true;
     $punt = false;
     $ent = '';
