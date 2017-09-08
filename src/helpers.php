@@ -264,3 +264,28 @@ function int_to_digits($number, $digits)
 
     return $gen;
 }
+
+function permission($userPermissions, $systemPermission) {
+    if(!is_array($userPermissions) && $userPermissions == '*') {
+        return true;
+    }
+
+    foreach ($userPermissions as $permission) {
+        if($permission == $systemPermission) {
+            return true;
+        } else {
+            if(strpos($permission,$systemPermission) !== false) {
+                return true;
+            }
+            if(strpos($permission, '*') !== false) {
+                preg_match('/(.+)\.\*/i',$permission, $match);
+                if(isset($match[1])) {
+                    if(strpos($systemPermission, $match[1]) !== false) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
